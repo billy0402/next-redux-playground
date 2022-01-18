@@ -16,7 +16,15 @@
     "incremental": true,
     "baseUrl": "src",
     "paths": {
+      "@actions/*": ["actions/*"],
+      "@components/*": ["components/*"],
+      "@constants/*": ["constants/*"],
+      "@hooks/*": ["hooks/*"],
+      "@models/*": ["models/*"],
       "@pages/*": ["pages/*"],
+      "@reducers/*": ["reducers/*"],
+      "@services/*": ["services/*"],
+      "@store/*": ["store/*"],
       "@styles/*": ["styles/*"]
     }
   },

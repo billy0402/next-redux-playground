@@ -1,0 +1,13 @@
+table {
+  width: 100%;
+}
+
+td,
+th {
+  padding: 8px;
+  border: 1px solid #dddddd;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}

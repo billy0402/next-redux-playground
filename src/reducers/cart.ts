@@ -16,10 +16,7 @@ const cartReducer = (state: Cart = cartInitialState, action: AnyAction) => {
     case CartAction.ADD_ITEM: {
       return {
         ...state,
-        items: [
-          ...state.items,
-          { ...action.payload, id: Math.random().toString() },
-        ],
+        items: [...state.items, action.payload],
       };
     }
     case CartAction.REMOVE_ITEM:

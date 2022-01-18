@@ -19,6 +19,7 @@
       "@actions/*": ["actions/*"],
       "@components/*": ["components/*"],
       "@constants/*": ["constants/*"],
+      "@fixtures/*": ["fixtures/*"],
       "@hooks/*": ["hooks/*"],
       "@models/*": ["models/*"],
       "@pages/*": ["pages/*"],

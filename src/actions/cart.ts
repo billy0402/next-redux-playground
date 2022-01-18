@@ -1,16 +1,32 @@
 import { Dispatch } from 'react';
 
+import { ApiAction } from '@constants/api';
 import { CartAction } from '@constants/cart';
 import { Action } from '@models/action';
 import { CartItem } from '@models/cart';
+import { apiCartAddItem } from '@services/cart';
 
 const addToCart =
   (cartItem: CartItem) =>
-  (dispatch: Dispatch<Action<CartAction.ADD_ITEM, CartItem>>) => {
+  async (dispatch: Dispatch<Action<CartAction.ADD_ITEM, CartItem>>) => {
     dispatch({
-      type: CartAction.ADD_ITEM,
-      payload: cartItem,
+      type: ApiAction.API_PENDING,
     });
+    try {
+      const { data } = await apiCartAddItem({
+        ...cartItem,
+        id: Math.random().toString(),
+      });
+      dispatch({
+        type: CartAction.ADD_ITEM,
+        payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: ApiAction.API_ERROR,
+        payload: (e as Error).message,
+      });
+    }
   };
 
 const deleteFromCart =

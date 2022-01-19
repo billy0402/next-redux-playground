@@ -4,11 +4,18 @@ import { ApiAction } from '@constants/api';
 import { CartAction } from '@constants/cart';
 import { Action } from '@models/action';
 import { CartItem } from '@models/cart';
+import { RootState } from '@models/store';
 import { apiCartAddItem } from '@services/cart';
 
 const addToCart =
   (cartItem: CartItem) =>
-  async (dispatch: Dispatch<Action<CartAction.ADD_ITEM, CartItem>>) => {
+  async (
+    dispatch: Dispatch<Action<CartAction.ADD_ITEM, CartItem>>,
+    getState: () => RootState,
+  ) => {
+    const { cart } = getState();
+    console.log(cart);
+
     dispatch({
       type: ApiAction.API_PENDING,
     });

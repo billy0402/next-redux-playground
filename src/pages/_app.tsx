@@ -2,7 +2,7 @@ import React from 'react';
 
 import type { AppProps } from 'next/app';
 
-import wrapper from '@store/store';
+import wrapper from '@store';
 import '@styles/globals.scss';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {

@@ -10,7 +10,7 @@ import { apiCartAddItem } from '@services/cart';
 const addToCart =
   (cartItem: CartItem) =>
   async (
-    dispatch: Dispatch<Action<CartAction.ADD_ITEM, CartItem>>,
+    dispatch: Dispatch<Action<CartAction, CartItem>>,
     getState: () => RootState,
   ) => {
     const { cart } = getState();
@@ -38,9 +38,7 @@ const addToCart =
 
 const deleteFromCart =
   (id: string) =>
-  (
-    dispatch: Dispatch<Action<CartAction.REMOVE_ITEM, Pick<CartItem, 'id'>>>,
-  ) => {
+  (dispatch: Dispatch<Action<CartAction, Pick<CartItem, 'id'>>>) => {
     dispatch({
       type: CartAction.REMOVE_ITEM,
       payload: { id },

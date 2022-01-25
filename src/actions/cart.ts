@@ -1,18 +1,16 @@
 import { Dispatch } from 'react';
 
+import { AnyAction } from 'redux';
+
 import { ApiAction } from '@constants/api';
 import { CartAction } from '@constants/cart';
-import { Action } from '@models/action';
 import { CartItem } from '@models/cart';
 import { RootState } from '@models/store';
 import { apiCartAddItem } from '@services/cart';
 
 const addToCart =
   (cartItem: CartItem) =>
-  async (
-    dispatch: Dispatch<Action<CartAction, CartItem>>,
-    getState: () => RootState,
-  ) => {
+  async (dispatch: Dispatch<AnyAction>, getState: () => RootState) => {
     const { cart } = getState();
     console.log(cart);
 
@@ -36,13 +34,11 @@ const addToCart =
     }
   };
 
-const deleteFromCart =
-  (id: string) =>
-  (dispatch: Dispatch<Action<CartAction, Pick<CartItem, 'id'>>>) => {
-    dispatch({
-      type: CartAction.REMOVE_ITEM,
-      payload: { id },
-    });
-  };
+const deleteFromCart = (id: string) => (dispatch: Dispatch<AnyAction>) => {
+  dispatch({
+    type: CartAction.REMOVE_ITEM,
+    payload: { id },
+  });
+};
 
 export { addToCart, deleteFromCart };

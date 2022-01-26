@@ -1,15 +1,13 @@
-import { useDispatch } from 'react-redux';
-
-import { deleteFromCart } from '@actions/cart';
-import { CartAction } from '@constants/cart';
+import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { clearCartItems, deleteFromCart } from '@reducers/cart';
 
 const CartList = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
-  const { items } = cart;
+  const { items } = cart.value;
 
-  const onClear = () => dispatch({ type: CartAction.CLEAR_ITEMS });
+  const onClear = () => dispatch(clearCartItems());
   const onDelete = (id: string) => dispatch(deleteFromCart(id));
 
   return (

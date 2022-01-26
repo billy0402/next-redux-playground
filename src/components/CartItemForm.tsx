@@ -1,12 +1,11 @@
-import { useDispatch } from 'react-redux';
-
 import { useForm } from 'react-hook-form';
 
-import { addToCart } from '@actions/cart';
+import useAppDispatch from '@hooks/useAppDispatch';
 import { CartItem } from '@models/cart';
+import { addToCart } from '@reducers/cart';
 
 const CartItemForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm<CartItem>();
   const onSubmit = (cartItem: CartItem) => dispatch(addToCart(cartItem));
 

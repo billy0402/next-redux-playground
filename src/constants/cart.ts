@@ -1,8 +1,0 @@
-enum CartAction {
-  GET_ITEMS = 'CART_GET_ITEMS',
-  ADD_ITEM = 'CART_ADD_ITEM',
-  REMOVE_ITEM = 'CART_REMOVE_ITEM',
-  CLEAR_ITEMS = 'CART_CLEAR_ITEMS',
-}
-
-export { CartAction };

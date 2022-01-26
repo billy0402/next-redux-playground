@@ -16,9 +16,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@actions/*": ["src/actions/*"],
       "@components/*": ["src/components/*"],
-      "@constants/*": ["src/constants/*"],
       "@fixtures/*": ["src/fixtures/*"],
       "@hooks/*": ["src/hooks/*"],
       "@models/*": ["src/models/*"],
@@ -28,7 +26,7 @@
       "@store": ["src/store"],
       "@store/*": ["src/store/*"],
       "@styles/*": ["src/styles/*"],
-      "@public/*": ["public/*"],
+      "@public/*": ["public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

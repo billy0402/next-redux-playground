@@ -1,38 +1,40 @@
-import { AnyAction } from 'redux';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { CartAction } from '@constants/cart';
-import { Cart } from '@models/cart';
+import { Cart, CartItem } from '@models/cart';
 
-const cartInitialState: Cart = {
-  items: [],
+type CartState = {
+  value: Cart;
+  status: 'idle' | 'loading' | 'failed';
 };
 
-const cartReducer = (state: Cart = cartInitialState, action: AnyAction) => {
-  switch (action.type) {
-    case CartAction.GET_ITEMS:
-      return {
-        ...state,
-      };
-    case CartAction.ADD_ITEM: {
-      return {
-        ...state,
-        items: [...state.items, action.payload],
-      };
-    }
-    case CartAction.REMOVE_ITEM:
-      return {
-        ...state,
-        items: state.items.filter(({ id }) => id !== action.payload.id),
-      };
-    case CartAction.CLEAR_ITEMS:
-      return {
-        ...state,
-        items: [],
-      };
-    default:
-      return state;
-  }
+const initialState: CartState = {
+  value: {
+    items: [],
+  },
+  status: 'idle',
 };
 
-export default cartReducer;
-export { cartInitialState };
+export const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      const newItem = {
+        ...action.payload,
+        id: Math.random().toString(),
+      };
+      state.value.items = [...state.value.items, newItem];
+    },
+    deleteFromCart: (state, action: PayloadAction<string>) => {
+      state.value.items = state.value.items.filter(
+        ({ id }) => id !== action.payload,
+      );
+    },
+    clearCartItems: (state) => {
+      state.value.items = [];
+    },
+  },
+});
+
+export default cartSlice.reducer;
+export const { addToCart, deleteFromCart, clearCartItems } = cartSlice.actions;

@@ -1,5 +1,16 @@
-import rootReducer from '@reducers/root';
+import { Action } from 'redux';
+import { ThunkAction } from '@reduxjs/toolkit';
 
-type RootState = ReturnType<typeof rootReducer>;
+import { makeStore } from '@store';
 
-export type { RootState };
+type AppStore = ReturnType<typeof makeStore>;
+type AppState = ReturnType<AppStore['getState']>;
+type AppDispatch = AppStore['dispatch'];
+type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  AppState,
+  unknown,
+  Action
+>;
+
+export type { AppStore, AppDispatch, AppState, AppThunk };

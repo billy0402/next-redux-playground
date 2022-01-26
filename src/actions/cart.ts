@@ -5,12 +5,12 @@ import { AnyAction } from 'redux';
 import { ApiAction } from '@constants/api';
 import { CartAction } from '@constants/cart';
 import { CartItem } from '@models/cart';
-import { RootState } from '@models/store';
+import { AppState } from '@models/store';
 import { apiCartAddItem } from '@services/cart';
 
 const addToCart =
   (cartItem: CartItem) =>
-  async (dispatch: Dispatch<AnyAction>, getState: () => RootState) => {
+  async (dispatch: Dispatch<AnyAction>, getState: () => AppState) => {
     const { cart } = getState();
     console.log(cart);
 

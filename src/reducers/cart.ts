@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Cart, CartItem } from '@models/cart';
+import { apiCartAddItem } from '@services/cart';
 
 type CartState = {
   value: Cart;
@@ -14,16 +15,23 @@ const initialState: CartState = {
   status: 'idle',
 };
 
-export const cartSlice = createSlice({
+const addToCartAsync = createAsyncThunk(
+  'cart/addItem',
+  async (cartItem: CartItem) => {
+    const response = await apiCartAddItem({
+      ...cartItem,
+      id: Math.random().toString(),
+    });
+    return response.data;
+  },
+);
+
+const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const newItem = {
-        ...action.payload,
-        id: Math.random().toString(),
-      };
-      state.value.items = [...state.value.items, newItem];
+      state.value.items = [...state.value.items, action.payload];
     },
     deleteFromCart: (state, action: PayloadAction<string>) => {
       state.value.items = state.value.items.filter(
@@ -34,7 +42,21 @@ export const cartSlice = createSlice({
       state.value.items = [];
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addToCartAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addToCartAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        cartSlice.caseReducers.addToCart(state, action);
+      })
+      .addCase(addToCartAsync.rejected, (state) => {
+        state.status = 'failed';
+      });
+  },
 });
 
 export default cartSlice.reducer;
 export const { addToCart, deleteFromCart, clearCartItems } = cartSlice.actions;
+export { addToCartAsync };

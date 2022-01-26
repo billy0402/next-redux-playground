@@ -2,12 +2,12 @@ import { useForm } from 'react-hook-form';
 
 import useAppDispatch from '@hooks/useAppDispatch';
 import { CartItem } from '@models/cart';
-import { addToCart } from '@reducers/cart';
+import { addToCartAsync } from '@reducers/cart';
 
 const CartItemForm = () => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm<CartItem>();
-  const onSubmit = (cartItem: CartItem) => dispatch(addToCart(cartItem));
+  const onSubmit = (cartItem: CartItem) => dispatch(addToCartAsync(cartItem));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

@@ -5,6 +5,7 @@ import { clearCartItems, deleteFromCart } from '@reducers/cart';
 const CartList = () => {
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
+  const { status } = cart;
   const { items } = cart.value;
 
   const onClear = () => dispatch(clearCartItems());
@@ -27,6 +28,11 @@ const CartList = () => {
         </thead>
 
         <tbody>
+          {status === 'loading' && (
+            <tr>
+              <td colSpan={4}>Loading...</td>
+            </tr>
+          )}
           {items.map(({ id, name, price }) => (
             <tr key={id}>
               <td>{id}</td>

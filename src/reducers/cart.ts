@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { isPendingAction, isRejectedAction } from '@models/api';
 import { Cart, CartItem } from '@models/cart';
 import { apiCartAddItem } from '@services/cart';
 
@@ -44,14 +45,14 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(addToCartAsync.pending, (state) => {
-        state.status = 'loading';
-      })
       .addCase(addToCartAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         cartSlice.caseReducers.addToCart(state, action);
       })
-      .addCase(addToCartAsync.rejected, (state) => {
+      .addMatcher(isPendingAction, (state, action) => {
+        state.status = 'loading';
+      })
+      .addMatcher(isRejectedAction, (state, action) => {
         state.status = 'failed';
       });
   },

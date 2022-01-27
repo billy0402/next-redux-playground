@@ -4,6 +4,8 @@ import { isPendingAction, isRejectedAction } from '@models/api';
 import { Cart, CartItem } from '@models/cart';
 import { apiCartAddItem } from '@services/cart';
 
+import hydrate from './hydrate';
+
 type CartState = {
   value: Cart;
   status: 'idle' | 'loading' | 'failed';
@@ -18,7 +20,7 @@ const initialState: CartState = {
 
 const addToCartAsync = createAsyncThunk(
   'cart/addItem',
-  async (cartItem: CartItem) => {
+  async (cartItem: Omit<CartItem, 'id'>) => {
     const response = await apiCartAddItem({
       ...cartItem,
       id: Math.random().toString(),
@@ -45,6 +47,12 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(hydrate, (state, action) => {
+        return {
+          ...state,
+          ...action.payload[cartSlice.name],
+        };
+      })
       .addCase(addToCartAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         cartSlice.caseReducers.addToCart(state, action);

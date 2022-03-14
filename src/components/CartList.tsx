@@ -1,12 +1,12 @@
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
-import { ApiStatus } from '@models/api-status';
+import { toApiStatus } from '@models/api-status';
 import { clearCartItems, deleteFromCart } from '@reducers/cart';
 
 const CartList = () => {
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
-  const { status } = cart;
+  const { loading, success, error } = toApiStatus(cart.status);
   const { items } = cart.value;
 
   const onClear = () => dispatch(clearCartItems());
@@ -29,7 +29,7 @@ const CartList = () => {
         </thead>
 
         <tbody>
-          {status === ApiStatus.loading && (
+          {loading && (
             <tr>
               <td colSpan={4}>Loading...</td>
             </tr>

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { isPendingAction, isRejectedAction } from '@models/api';
+import { ApiStatus } from '@models/api-status';
 import { Cart, CartItem } from '@models/cart';
 import { apiCartAddItem } from '@services/cart';
 
@@ -8,14 +9,14 @@ import hydrate from './hydrate';
 
 type CartState = {
   value: Cart;
-  status: 'idle' | 'loading' | 'failed';
+  status: ApiStatus;
 };
 
 const initialState: CartState = {
   value: {
     items: [],
   },
-  status: 'idle',
+  status: ApiStatus.idle,
 };
 
 const addToCartAsync = createAsyncThunk(
@@ -54,14 +55,14 @@ const cartSlice = createSlice({
         };
       })
       .addCase(addToCartAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
+        state.status = ApiStatus.idle;
         cartSlice.caseReducers.addToCart(state, action);
       })
       .addMatcher(isPendingAction, (state, action) => {
-        state.status = 'loading';
+        state.status = ApiStatus.loading;
       })
       .addMatcher(isRejectedAction, (state, action) => {
-        state.status = 'failed';
+        state.status = ApiStatus.failed;
       });
   },
 });

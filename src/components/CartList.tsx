@@ -1,5 +1,6 @@
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
+import { ApiStatus } from '@models/api-status';
 import { clearCartItems, deleteFromCart } from '@reducers/cart';
 
 const CartList = () => {
@@ -28,7 +29,7 @@ const CartList = () => {
         </thead>
 
         <tbody>
-          {status === 'loading' && (
+          {status === ApiStatus.loading && (
             <tr>
               <td colSpan={4}>Loading...</td>
             </tr>

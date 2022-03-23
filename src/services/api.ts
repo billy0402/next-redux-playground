@@ -6,4 +6,10 @@ const apiInstance = axios.create({
   withCredentials: true,
 });
 
+const authApiInstance = axios.create({
+  baseURL: 'http://localhost:8000/api',
+  headers: { 'Content-Type': 'application/json' },
+});
+
 export default apiInstance;
+export { authApiInstance };

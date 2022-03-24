@@ -1,54 +1,37 @@
-import { useState } from 'react';
-
 import { NextPage } from 'next';
 
 import { useForm } from 'react-hook-form';
 
-import { useAuthContext } from '@contexts/auth/AuthProvider';
-import { TokenObtain } from '@models/token';
-import { apiTokenObtain, apiTokenRefresh } from '@services/auth';
+import useAppDispatch from '@hooks/useAppDispatch';
+import useAppSelector from '@hooks/useAppSelector';
+import { loadJson } from '@lib/local-storage';
+import { toApiStatus } from '@models/api-status';
+import { Token, TokenObtain } from '@models/token';
+import {
+  clearToken as clearTokenAction,
+  obtainTokenAsync,
+  refreshTokenAsync,
+} from '@reducers/auth';
 
 const AuthPage: NextPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>();
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth);
 
-  const authContext = useAuthContext();
+  const { loading, success, error } = toApiStatus(token.status);
+
   const { register, handleSubmit } = useForm<TokenObtain>();
 
   const obtainToken = async (data: TokenObtain) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await apiTokenObtain(data);
-      const token = response.data;
-      authContext.obtainToken(token);
-    } catch (error) {
-      setError(error as Error);
-    }
-
-    setIsLoading(false);
+    dispatch(obtainTokenAsync(data));
   };
 
   const refreshToken = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await await apiTokenRefresh({
-        refresh: authContext.token.refresh,
-      });
-      const { access } = response.data;
-      authContext.refreshToken(access);
-    } catch (error) {
-      setError(error as Error);
-    }
-
-    setIsLoading(false);
+    const token = loadJson<Token>('token');
+    dispatch(refreshTokenAsync({ refresh: token.refresh }));
   };
 
   const clearToken = () => {
-    authContext.clearToken();
+    dispatch(clearTokenAction());
   };
 
   return (
@@ -74,9 +57,9 @@ const AuthPage: NextPage = () => {
         </button>
       </form>
 
-      {isLoading && <p>Loading...</p>}
-      {error && <p>{error.message}</p>}
-      <pre>{JSON.stringify(authContext.token, null, 4)}</pre>
+      {loading && <p>Loading...</p>}
+      {error && <p>Something error!!!</p>}
+      <pre>{JSON.stringify(token.data, null, 4)}</pre>
     </>
   );
 };

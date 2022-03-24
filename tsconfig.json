@@ -20,6 +20,7 @@
       "@contexts/*": ["src/contexts/*"],
       "@fixtures/*": ["src/fixtures/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@lib/*": ["src/lib/*"],
       "@models/*": ["src/models/*"],
       "@pages/*": ["src/pages/*"],
       "@reducers/*": ["src/reducers/*"],

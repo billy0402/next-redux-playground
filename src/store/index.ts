@@ -3,11 +3,12 @@ import { createWrapper } from 'next-redux-wrapper';
 
 import { AppStore } from '@models/store';
 
+import authReducer from '@reducers/auth';
 import cartReducer from '@reducers/cart';
 
 const makeStore = () =>
   configureStore({
-    reducer: { cart: cartReducer },
+    reducer: { auth: authReducer, cart: cartReducer },
     devTools: process.env.NODE_ENV !== 'production',
   });
 

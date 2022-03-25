@@ -8,16 +8,16 @@ import { loadJson } from '@lib/local-storage';
 import { toApiStatus } from '@models/api-status';
 import { Token, TokenObtain } from '@models/token';
 import {
-  clearToken as clearTokenAction,
+  clearTokenAsync,
   obtainTokenAsync,
   refreshTokenAsync,
 } from '@reducers/auth';
 
 const AuthPage: NextPage = () => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth);
+  const auth = useAppSelector((state) => state.auth);
 
-  const { loading, success, error } = toApiStatus(token.status);
+  const { loading, success, error } = toApiStatus(auth.status);
 
   const { register, handleSubmit } = useForm<TokenObtain>();
 
@@ -27,11 +27,12 @@ const AuthPage: NextPage = () => {
 
   const refreshToken = async () => {
     const token = loadJson<Token>('token');
+    if (!token || !token.refresh) return;
     dispatch(refreshTokenAsync({ refresh: token.refresh }));
   };
 
   const clearToken = () => {
-    dispatch(clearTokenAction());
+    dispatch(clearTokenAsync());
   };
 
   return (
@@ -59,7 +60,8 @@ const AuthPage: NextPage = () => {
 
       {loading && <p>Loading...</p>}
       {error && <p>Something error!!!</p>}
-      <pre>{JSON.stringify(token.data, null, 4)}</pre>
+      <pre>{JSON.stringify(auth.data, null, 4)}</pre>
+      <pre>{JSON.stringify(loadJson<Token>('token'), null, 4)}</pre>
     </>
   );
 };

@@ -1,18 +1,23 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { loadJson, saveJson } from '@lib/local-storage';
+import { loadJson, removeJson, saveJson } from '@lib/local-storage';
 import { isPendingAction, isRejectedAction } from '@models/api';
 import { ApiStatus } from '@models/api-status';
 import { Token, TokenObtain, TokenRefresh } from '@models/token';
 import { apiTokenObtain, apiTokenRefresh } from '@services/auth';
+import { Auth } from '@models/auth';
 
 type AuthState = {
-  data: Token;
+  data: Auth;
+  error: Error;
   status: ApiStatus;
 };
 
 const initialState: AuthState = {
-  data: {} as Token,
+  data: {
+    isLoggedIn: !!loadJson<Token>('token'),
+  },
+  error: {} as Error,
   status: ApiStatus.idle,
 };
 
@@ -35,34 +40,43 @@ const refreshTokenAsync = createAsyncThunk(
   },
 );
 
+const clearTokenAsync = createAsyncThunk('auth/clearToken', async () => {
+  removeJson('token');
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    obtainToken: (state, action: PayloadAction<Token>) => {
-      state.data = action.payload;
+    obtainToken: (state) => {
+      state.data.isLoggedIn = true;
     },
-    refreshToken: (state, action: PayloadAction<Token>) => {
-      state.data.access = action.payload.access;
+    refreshToken: (state) => {
+      state.data.isLoggedIn = true;
     },
     clearToken: (state) => {
-      state.data = initialState.data;
+      state.data.isLoggedIn = false;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(obtainTokenAsync.fulfilled, (state, action) => {
+      .addCase(obtainTokenAsync.fulfilled, (state) => {
         state.status = ApiStatus.idle;
-        authSlice.caseReducers.obtainToken(state, action);
+        authSlice.caseReducers.obtainToken(state);
       })
-      .addCase(refreshTokenAsync.fulfilled, (state, action) => {
+      .addCase(refreshTokenAsync.fulfilled, (state) => {
         state.status = ApiStatus.idle;
-        authSlice.caseReducers.refreshToken(state, action);
+        authSlice.caseReducers.refreshToken(state);
+      })
+      .addCase(clearTokenAsync.fulfilled, (state) => {
+        state.status = ApiStatus.idle;
+        authSlice.caseReducers.clearToken(state);
       })
       .addMatcher(isPendingAction, (state, action) => {
         state.status = ApiStatus.loading;
       })
-      .addMatcher(isRejectedAction, (state, action) => {
+      .addMatcher(isRejectedAction, (state, action: any) => {
+        state.error = action.error;
         state.status = ApiStatus.failed;
       });
   },
@@ -70,4 +84,4 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 export const { obtainToken, refreshToken, clearToken } = authSlice.actions;
-export { refreshTokenAsync, obtainTokenAsync };
+export { refreshTokenAsync, obtainTokenAsync, clearTokenAsync };

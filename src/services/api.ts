@@ -15,7 +15,9 @@ const authApiInstance = axios.create({
 });
 authApiInstance.interceptors.request.use((config) => {
   const token = loadJson<Token>('token');
-  config.headers!['Authorization'] = `Bearer ${token.access}`;
+  if (token && token.access) {
+    config.headers!['Authorization'] = `Bearer ${token.access}`;
+  }
   return config;
 });
 axios.interceptors.response.use(

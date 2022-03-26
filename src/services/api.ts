@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-import { loadJson } from '@lib/local-storage';
+import { loadJson, saveJson } from '@lib/local-storage';
 import { Token } from '@models/token';
+
+import { apiTokenRefresh } from './auth';
 
 const apiInstance = axios.create({
   baseURL: 'http://localhost:3000/api',
@@ -20,11 +22,23 @@ authApiInstance.interceptors.request.use((config) => {
   }
   return config;
 });
-axios.interceptors.response.use(
+authApiInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
+    if (error.response) {
+      if (
+        error.response.status === 401 &&
+        error.config.url !== '/token/refresh/'
+      ) {
+        const token = loadJson<Token>('token');
+        const response = await apiTokenRefresh({ refresh: token.refresh });
+        const { access } = response.data;
+        await saveJson<Token>('token', { ...token, access });
+        return authApiInstance.request(error.config);
+      }
+    }
     return Promise.reject(error);
   },
 );

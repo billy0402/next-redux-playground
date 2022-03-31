@@ -58,10 +58,10 @@ const cartSlice = createSlice({
         state.status = ApiStatus.idle;
         cartSlice.caseReducers.addToCart(state, action);
       })
-      .addMatcher(isPendingAction, (state, action) => {
+      .addMatcher(isPendingAction('cart'), (state, action) => {
         state.status = ApiStatus.loading;
       })
-      .addMatcher(isRejectedAction, (state, action) => {
+      .addMatcher(isRejectedAction('cart'), (state, action) => {
         state.status = ApiStatus.failed;
       });
   },

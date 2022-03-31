@@ -72,10 +72,10 @@ const authSlice = createSlice({
         state.status = ApiStatus.idle;
         authSlice.caseReducers.clearToken(state);
       })
-      .addMatcher(isPendingAction, (state, action) => {
+      .addMatcher(isPendingAction('auth'), (state, action) => {
         state.status = ApiStatus.loading;
       })
-      .addMatcher(isRejectedAction, (state, action: any) => {
+      .addMatcher(isRejectedAction('auth'), (state, action: any) => {
         state.error = action.error;
         state.status = ApiStatus.failed;
       });

@@ -39,10 +39,10 @@ const bookDetailSlice = createSlice({
         state.status = ApiStatus.idle;
         bookDetailSlice.caseReducers.bookDetail(state, action);
       })
-      .addMatcher(isPendingAction, (state, action) => {
+      .addMatcher(isPendingAction('book/detail'), (state, action) => {
         state.status = ApiStatus.loading;
       })
-      .addMatcher(isRejectedAction, (state, action: any) => {
+      .addMatcher(isRejectedAction('book/detail'), (state, action: any) => {
         state.error = action.error;
         state.status = ApiStatus.failed;
       });

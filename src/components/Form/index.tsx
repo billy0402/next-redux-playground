@@ -4,11 +4,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import Field from './Field';
 
-type FieldConfig = HTMLAttributes<HTMLInputElement> & {
+type FieldConfig = HTMLAttributes<HTMLInputElement | HTMLSelectElement> & {
   name: string;
   type: string;
   label: string;
   required: boolean;
+  options?: any[];
+  multiple?: boolean;
 };
 
 type Props = {

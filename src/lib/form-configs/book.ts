@@ -12,13 +12,39 @@ const bookFieldConfigs: FieldConfig[] = [
     name: 'summary',
     type: 'text',
     label: '摘要',
-    required: false,
+    required: true,
   },
   {
     name: 'price',
     type: 'number',
     label: '價格',
     required: true,
+  },
+  {
+    name: 'authors',
+    type: 'select',
+    label: '作者',
+    required: true,
+    multiple: true,
+  },
+  {
+    name: 'publisher',
+    type: 'select',
+    label: '出版社',
+    required: true,
+  },
+  {
+    name: 'classification',
+    type: 'select',
+    label: '分類',
+    required: true,
+  },
+  {
+    name: 'tags',
+    type: 'select',
+    label: '標籤',
+    required: true,
+    multiple: true,
   },
 ];
 

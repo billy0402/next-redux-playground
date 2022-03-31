@@ -1,16 +1,10 @@
 import { memo } from 'react';
 
-import { UseFormReturn } from 'react-hook-form';
-
-import { FieldConfig } from '.';
-
-type Props = UseFormReturn & {
-  fieldConfig: FieldConfig;
-};
+import { InnerProps } from './Field';
 
 const Input =
   // memo(
-  function Inner({ register, formState: { errors }, fieldConfig }: Props) {
+  function Inner({ register, formState: { errors }, fieldConfig }: InnerProps) {
     // console.log(fieldConfig);
 
     return (

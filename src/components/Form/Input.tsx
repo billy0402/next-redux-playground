@@ -27,8 +27,7 @@ const Input =
       </>
     );
   };
-//   (prevProps, nextProps) =>
-//     prevProps.formState.isDirty === nextProps.formState.isDirty,
+//   (prevProps, nextProps) => prevProps.fieldConfig === nextProps.fieldConfig,
 // );
 
 export default Input;

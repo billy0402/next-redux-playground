@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import Link from 'next/link';
+
 import useAppDispatch from '@hooks/useAppDispatch';
 import useAppSelector from '@hooks/useAppSelector';
 import useLoggedIn from '@hooks/useLoggedIn';
@@ -25,6 +27,9 @@ const BookListPage = () => {
     <>
       {loading && <p>Loading...</p>}
       {error && <p>{bookList.error.message}</p>}
+      <button>
+        <Link href='/book/create'>New</Link>
+      </button>
       {success && bookList.data && (
         <table>
           <thead>
@@ -39,7 +44,11 @@ const BookListPage = () => {
           <tbody>
             {bookList.data.map((book) => (
               <tr key={book.id}>
-                <td>{book.id}</td>
+                <td>
+                  <Link href={`/book/${book.id}`}>
+                    <a>{book.id}</a>
+                  </Link>
+                </td>
                 <td>{book.name}</td>
                 <td>{book.summary}</td>
                 <td>{book.price}</td>

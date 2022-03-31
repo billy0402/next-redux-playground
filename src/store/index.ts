@@ -5,6 +5,7 @@ import { AppStore } from '@models/store';
 
 import authReducer from '@reducers/auth';
 import bookListReducer from '@reducers/bookList';
+import bookDetailReducer from '@reducers/bookDetail';
 import cartReducer from '@reducers/cart';
 
 const makeStore = () =>
@@ -12,6 +13,7 @@ const makeStore = () =>
     reducer: {
       auth: authReducer,
       bookList: bookListReducer,
+      bookDetail: bookDetailReducer,
       cart: cartReducer,
     },
     devTools: process.env.NODE_ENV !== 'production',

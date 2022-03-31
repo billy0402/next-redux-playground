@@ -10,6 +10,8 @@ const hasPrefix = (action: AnyAction, prefix: string) =>
   action.type.startsWith(prefix);
 const hasSuffix = (action: AnyAction, suffix: string) =>
   action.type.endsWith(suffix);
+const getActionType = (value: string, prefix: string) =>
+  value.substring(prefix.length).split('/')[1];
 
 const isPendingAction =
   (prefix: string) =>
@@ -27,4 +29,4 @@ const isRejectedAction =
     return hasPrefix(action, prefix) && hasSuffix(action, '/rejected');
   };
 
-export { isPendingAction, isFulfilledAction, isRejectedAction };
+export { isPendingAction, isFulfilledAction, isRejectedAction, getActionType };

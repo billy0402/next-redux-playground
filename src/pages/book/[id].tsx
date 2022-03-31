@@ -9,10 +9,14 @@ import useAppSelector from '@hooks/useAppSelector';
 import { setDefaultValues } from '@lib/form';
 import { bookFieldConfigs } from '@lib/form-configs/book';
 import { toApiStatus } from '@models/api-status';
-import { bookDetailAsync, bookDetailReset } from '@reducers/bookDetail';
 import { authorListAsync } from '@reducers/authorList';
-import { publisherListAsync } from '@reducers/publisherList';
+import {
+  bookCreateAsync,
+  bookDetailAsync,
+  bookDetailReset,
+} from '@reducers/bookDetail';
 import { classificationListAsync } from '@reducers/classificationList';
+import { publisherListAsync } from '@reducers/publisherList';
 import { tagListAsync } from '@reducers/tagList';
 
 const BookDetailPage = () => {
@@ -24,7 +28,12 @@ const BookDetailPage = () => {
     (state) => state.classificationList,
   );
   const tagList = useAppSelector((state) => state.tagList);
-  const { loading, success, error } = toApiStatus(bookDetail.status);
+  const { loading, success, error } = toApiStatus(bookDetail.status.detail);
+  const {
+    loading: createLoading,
+    success: createSuccess,
+    error: createError,
+  } = toApiStatus(bookDetail.status.create);
   const {
     loading: authorListLoading,
     success: authorListSuccess,
@@ -107,7 +116,7 @@ const BookDetailPage = () => {
   }, []);
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    dispatch(bookCreateAsync(data));
   };
 
   if (

@@ -4,7 +4,7 @@ type Timestamp = {
 };
 
 type BaseModel = Timestamp & {
-  id: string;
+  id: number;
 };
 
 export type { BaseModel };

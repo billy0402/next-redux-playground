@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getActionType, isPendingAction, isRejectedAction } from '@models/api';
+import { asyncMatcher } from '@lib/extraReducers';
+import { ApiState } from '@models/api-state';
 import { ApiStatus } from '@models/api-status';
 import { Book } from '@models/book';
 import {
@@ -10,11 +11,7 @@ import {
   apiBookUpdate,
 } from '@services/book';
 
-type BookDetailState = {
-  data: Book | null;
-  error: { [key: string]: Error | null };
-  status: { [key: string]: ApiStatus };
-};
+type BookDetailState = ApiState<Book>;
 
 const initialState: BookDetailState = {
   data: null,
@@ -76,30 +73,18 @@ const bookDetailSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(bookDetailAsync.fulfilled, (state, action) => {
-        state.status.detail = ApiStatus.idle;
         bookDetailSlice.caseReducers.bookDetail(state, action);
       })
       .addCase(bookCreateAsync.fulfilled, (state, action) => {
-        state.status.create = ApiStatus.idle;
         bookDetailSlice.caseReducers.bookDetail(state, action);
       })
       .addCase(bookUpdateAsync.fulfilled, (state, action) => {
-        state.status.update = ApiStatus.idle;
         bookDetailSlice.caseReducers.bookDetail(state, action);
       })
       .addCase(bookDeleteAsync.fulfilled, (state, action) => {
-        state.status.delete = ApiStatus.idle;
         bookDetailSlice.caseReducers.bookDetailReset(state);
-      })
-      .addMatcher(isPendingAction(asyncPrefix), (state, action) => {
-        const actionType = getActionType(action.type, asyncPrefix);
-        state.status[actionType] = ApiStatus.loading;
-      })
-      .addMatcher(isRejectedAction(asyncPrefix), (state, action: any) => {
-        const actionType = getActionType(action.type, asyncPrefix);
-        state.status[actionType] = ApiStatus.failed;
-        state.error[actionType] = action.error;
-      });
+      }),
+      asyncMatcher(builder, asyncPrefix);
   },
 });
 

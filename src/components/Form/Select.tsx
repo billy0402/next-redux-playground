@@ -3,30 +3,27 @@ import { InnerProps } from './Field';
 const Select = ({
   register,
   formState: { errors },
-  fieldConfig,
+  fieldConfig: { name, label, required, multiple, options, defaultValue },
 }: InnerProps) => {
   // console.log(fieldConfig);
 
   return (
     <>
-      <label htmlFor={fieldConfig.name}>{fieldConfig.label}</label>
-
+      <label htmlFor={name}>{label}</label>
       <select
-        {...register(fieldConfig.name, { required: fieldConfig.required })}
-        {...fieldConfig}
-        id={fieldConfig.name}
-        multiple={fieldConfig.multiple}
+        {...register(name, { required: required })}
+        id={name}
+        multiple={multiple}
+        defaultValue={defaultValue}
       >
-        <option>請選擇{fieldConfig.name}</option>
-        {fieldConfig.options?.map((option) => (
+        <option>請選擇{name}</option>
+        {options?.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
-      {errors[fieldConfig.name] && (
-        <span>{errors[fieldConfig.name].message}</span>
-      )}
+      {errors[name] && <span>{errors[name].message}</span>}
     </>
   );
 };

@@ -4,20 +4,23 @@ import { InnerProps } from './Field';
 
 const Input =
   // memo(
-  function Inner({ register, formState: { errors }, fieldConfig }: InnerProps) {
+  function Inner({
+    register,
+    formState: { errors },
+    fieldConfig: { name, type, label, required, defaultValue },
+  }: InnerProps) {
     // console.log(fieldConfig);
 
     return (
       <>
-        <label htmlFor={fieldConfig.name}>{fieldConfig.label}</label>
+        <label htmlFor={name}>{label}</label>
         <input
-          {...register(fieldConfig.name, { required: fieldConfig.required })}
-          {...fieldConfig}
-          id={fieldConfig.name}
+          {...register(name, { required: required })}
+          id={name}
+          type={type}
+          defaultValue={defaultValue}
         />
-        {errors[fieldConfig.name] && (
-          <span>{errors[fieldConfig.name].message}</span>
-        )}
+        {errors[name] && <span>{errors[name].message}</span>}
       </>
     );
   };

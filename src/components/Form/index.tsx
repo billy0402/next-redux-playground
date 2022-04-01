@@ -1,16 +1,14 @@
-import { HTMLAttributes } from 'react';
+import { InputHTMLAttributes } from 'react';
 
 import { FormProvider, useForm } from 'react-hook-form';
 
 import Field from './Field';
 
-type FieldConfig = HTMLAttributes<HTMLInputElement | HTMLSelectElement> & {
-  name: string;
-  type: string;
+type FieldConfig = InputHTMLAttributes<HTMLInputElement | HTMLSelectElement> & {
+  name: string; // override InputHTMLAttributes
+  type: string; // override InputHTMLAttributes
   label: string;
-  required: boolean;
   options?: any[];
-  multiple?: boolean;
 };
 
 type Props = {

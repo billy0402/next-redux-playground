@@ -1,23 +1,24 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { isPendingAction, isRejectedAction } from '@models/api';
+import { asyncMatcher } from '@lib/extraReducers';
+import { ApiState } from '@models/api-state';
 import { ApiStatus } from '@models/api-status';
 import { Book } from '@models/book';
 import { apiBookList } from '@services/book';
 
-type BookListState = {
-  data: Book[];
-  error: Error;
-  status: ApiStatus;
-};
-
+type BookListState = ApiState<Book[]>;
 const initialState: BookListState = {
-  data: [] as Book[],
-  error: {} as Error,
-  status: ApiStatus.idle,
+  data: null,
+  error: {
+    list: null,
+  },
+  status: {
+    list: ApiStatus.idle,
+  },
 };
 
-const bookListAsync = createAsyncThunk('book/list', async () => {
+const asyncPrefix = 'book/list';
+const bookListAsync = createAsyncThunk(`${asyncPrefix}/list`, async () => {
   const response = await apiBookList();
   return response.data;
 });
@@ -31,18 +32,10 @@ const bookListSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(bookListAsync.fulfilled, (state, action) => {
-        state.status = ApiStatus.idle;
-        bookListSlice.caseReducers.bookList(state, action);
-      })
-      .addMatcher(isPendingAction('book/list'), (state, action) => {
-        state.status = ApiStatus.loading;
-      })
-      .addMatcher(isRejectedAction('book/list'), (state, action: any) => {
-        state.error = action.error;
-        state.status = ApiStatus.failed;
-      });
+    builder.addCase(bookListAsync.fulfilled, (state, action) => {
+      bookListSlice.caseReducers.bookList(state, action);
+    }),
+      asyncMatcher(builder, asyncPrefix);
   },
 });
 

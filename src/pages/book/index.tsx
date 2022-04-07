@@ -23,7 +23,7 @@ const BookListPage = () => {
   const tagList = useAppSelector((state) => state.tagList);
   const { loginGuard } = useLoggedIn();
 
-  const { loading, success, error } = toApiStatus(bookList.status);
+  const { loading, success, error } = toApiStatus(bookList.status.list);
   const {
     loading: authorListLoading,
     success: authorListSuccess,
